@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -49,14 +50,43 @@ pipeline {
                 }
             }
         }
+
+        stage('Terraform Init') {
+            steps {
+                dir('terraform') {
+                    sh 'terraform init -input=false'
+                }
+            }
+        }
+
+        stage('Terraform Validate') {
+            steps {
+                dir('terraform') {
+                    sh 'terraform fmt -check'
+                    sh 'terraform validate'
+                }
+            }
+        }
+
+        stage('Terraform Plan') {
+            steps {
+                dir('terraform') {
+                    sh 'terraform plan -input=false -no-color'
+                }
+            }
+        }
     }
 
     post {
         always {
             junit 'application/target/surefire-reports/*.xml'
-            archiveArtifacts artifacts: 'application/target/*.jar',
-                             fingerprint: true,
-                             allowEmptyArchive: true
+
+            archiveArtifacts(
+                artifacts: 'application/target/*.jar',
+                fingerprint: true,
+                allowEmptyArchive: true
+            )
         }
     }
 }
+

@@ -1,0 +1,8 @@
+Project: hospital-management
+Environment: development
+Application: Spring Boot Hospital Management
+Application Port: 8080
+CI/CD: Jenkins
+Database: PostgreSQL
+Infrastructure Management: Terraform
+Provisioning: Local provider demonstration
